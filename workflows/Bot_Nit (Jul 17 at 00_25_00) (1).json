@@ -1,0 +1,247 @@
+{
+  "name": "Bot_Nit (Jul 17 at 00:25:00)",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "\"Eres el Asistente Oficial de Atención al Estudiante de La Academia de Alta Costura y Confección. Tu único objetivo es responder dudas basadas estrictamente en los documentos adjuntos (Reglamento, Reembolsos, Becas, etc.). Si un alumno te pregunta algo que no está en los documentos, debes responder amablemente: 'Lo siento, no tengo esa información detallada en mis registros. Por favor, contacta a soporte humano en soporte@escuela.com para ayudarte mejor'. Nunca inventes políticas ni excepciones.\nSiempre que el usuario haga una pregunta, debes consultar primero la herramienta de Supabase Vector Store antes de dar una respuesta\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        288,
+        0
+      ],
+      "id": "77d78d7e-67e2-4448-9e06-a63575e07ce5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "1134255968",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        0
+      ],
+      "id": "dd814d1e-6e34-44ef-8ee0-0e669e425908",
+      "name": "Send a text message",
+      "webhookId": "cb4c5d52-7b34-4a7f-9bd4-9e61e3a7f924",
+      "credentials": {
+        "telegramApi": {
+          "id": "BZvRNbm5HIBjoHHj",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        48,
+        0
+      ],
+      "id": "26efc0ce-5fe2-4465-b6c4-c82cc47ae60f",
+      "name": "Telegram Trigger",
+      "webhookId": "adfcb335-b4fd-410f-8389-41e63e2c12d1",
+      "credentials": {
+        "telegramApi": {
+          "id": "BZvRNbm5HIBjoHHj",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        352,
+        224
+      ],
+      "id": "e5686ddc-f4c5-42be-971f-844946faea6e",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "2AsBRynRm4SmUygM",
+          "name": "Sup RAG"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Usala siempre para buscar información sobre políticas, costos, cursos o preguntas frecuentes de la institucion.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        544,
+        208
+      ],
+      "id": "81fb9aaa-be8f-44ec-82bc-e2a205a7d40a",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "jPA5Cuei0NnlyRQL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-ada-002",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        368
+      ],
+      "id": "94ab201e-5712-41ec-8b88-3b93e2e9b627",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "mFBVRuWVF44Tw7nX",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        208
+      ],
+      "id": "c54c2bdf-d595-4ffc-934e-cd3dac7f0ad8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "mFBVRuWVF44Tw7nX",
+          "name": "OpenAI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "60d9b0dd-2876-42d9-9030-0ce6708a3f91",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0750197d45a3296a48da88e44a155ecf0c694ad9a028d42584e748ee5b622629"
+  },
+  "nodeGroups": [],
+  "id": "ZvbK2TJ26z8irmpd",
+  "tags": []
+}
