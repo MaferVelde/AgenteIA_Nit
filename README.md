@@ -4,8 +4,17 @@
 
 Nit actúa como el primer frente de interacción con los alumnos, resolviendo de forma autónoma, precisa y amable cualquier duda sobre reglamentos internos, costos, políticas de reembolso, uso de la plataforma educativa y programas de becas.
 
----
 
+```
+├── data/
+│   ├── oferta_costos.pdf   # Documento de costos e inscripciones
+│   └── manual_institucional.pdf # Reglamento, políticas y FAQs
+├── workflows/
+│   └── bot_nit.json        # Archivo JSON exportado desde n8n
+└── README.md               # Documentación principal del proyecto
+```
+
+---
 ## 📋 Índice
 * [Sobre el Proyecto](#-sobre-el-proyecto)
 * [Tecnologías Utilizadas](#-tecnologías-utilizadas)
