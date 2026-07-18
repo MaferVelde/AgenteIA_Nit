@@ -7,8 +7,15 @@ Nit actúa como el primer frente de interacción con los alumnos, resolviendo de
 
 ```
 ├── data/
-│   ├── oferta_costos.pdf   # Documento de costos e inscripciones
-│   └── manual_institucional.pdf # Reglamento, políticas y FAQs
+│   ├── oferta_costos.pdf           # Documento de costos e inscripciones
+│   └── manual_institucional.pdf    # Reglamento, políticas y FAQs
+├── evidencia/
+|   ├── Screenshot_20260717_221709_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
+|   ├── Screenshot_20260717_221718_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
+|   ├── Screenshot_20260717_221739_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
+|   ├── Screenshot_20260717_221747_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
+|   ├── Screenshot_20260717_221801_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
+│   └── Screenshot_20260717_221805_org.telegram.messenger.jpg      # Imagen de evidencia del funcionamiento
 ├── workflows/
 │   └── bot_nit.json        # Archivo JSON exportado desde n8n
 └── README.md               # Documentación principal del proyecto
